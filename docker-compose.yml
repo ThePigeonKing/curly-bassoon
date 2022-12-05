@@ -6,14 +6,13 @@ services:
     env_file:
       - ./.env
     image: 'postgres:14'
-    command: ["postgres", "-c", "log_statement=all", "-c", "log_destination=stderr"]
     restart: always
     ports:
       - '${POSTGRES_PORT}:${POSTGRES_PORT}'
   ping:
     image: willfarrell/ping
     environment:
-      - HOSTNAME: "localhost"
-      - TIMEOUT: 300
+      HOSTNAME: "localhost"
+      TIMEOUT: 300
 
     

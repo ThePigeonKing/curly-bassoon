@@ -3,6 +3,13 @@ ifeq ($(shell test -e '.env' && echo -n yes), yes)
     include .env
 endif
 
+# docker-compose or docker compose
+ifneq (, $(shell which docker-compose))
+DC = docker-compose
+else
+DC = docker compose
+endif
+
 # Manual definition
 ifndef APP_PORT
 override APP_PORT = 8000
@@ -49,29 +56,29 @@ clean:  ## Clean directory from garbage files
 help:
 	@make -pRrq  -f $(THIS_FILE) : 2>/dev/null | awk -v RS= -F: '/^# File/,/^# Finished Make data base/ {if ($$1 !~ "^[#.]") {print $$1}}' | sort | egrep -v -e '^[^[:alnum:]]' -e '^$@$$'
 build:
-	docker-compose -f docker-compose.yml build $(c)
+	$(DC) -f docker-compose.yml build $(c)
 up:
-	docker-compose -f docker-compose.yml up -d $(c)
+	$(DC) -f docker-compose.yml up -d $(c)
 start:
-	docker-compose -f docker-compose.yml start $(c)
+	$(DC) -f docker-compose.yml start $(c)
 down:
-	docker-compose -f docker-compose.yml down $(c)
+	$(DC) -f docker-compose.yml down $(c)
 destroy:
-	docker-compose -f docker-compose.yml down -v $(c)
+	$(DC) -f docker-compose.yml down -v $(c)
 stop:
-	docker-compose -f docker-compose.yml stop $(c)
+	$(DC) -f docker-compose.yml stop $(c)
 restart:
-	docker-compose -f docker-compose.yml stop $(c)
-	docker-compose -f docker-compose.yml up -d $(c)
+	$(DC) -f docker-compose.yml stop $(c)
+	$(DC) -f docker-compose.yml up -d $(c)
 logs:
-	docker-compose -f docker-compose.yml logs --tail=100 -f $(c)
+	$(DC) -f docker-compose.yml logs --tail=100 -f $(c)
 logs-api:
-	docker-compose -f docker-compose.yml logs --tail=100 -f api
+	$(DC) -f docker-compose.yml logs --tail=100 -f api
 ps:
-	docker-compose -f docker-compose.yml ps
+	$(DC) -f docker-compose.yml ps
 login-timescale:
-	docker-compose -f docker-compose.yml exec timescale /bin/bash
+	$(DC) -f docker-compose.yml exec timescale /bin/bash
 login-api:
-	docker-compose -f docker-compose.yml exec api /bin/bash
+	$(DC) -f docker-compose.yml exec api /bin/bash
 db-shell:
-	docker-compose -f docker-compose.yml exec timescale psql -Upostgres
+	$(DC) -f docker-compose.yml exec timescale psql -Upostgres
