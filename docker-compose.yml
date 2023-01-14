@@ -14,5 +14,16 @@ services:
     environment:
       HOSTNAME: "localhost"
       TIMEOUT: 300
-
-    
+  
+  servicebackend:
+    container_name: backend
+    build: .
+    env_file:
+      - ./.env
+    environment:
+      - POSTGRES_HOST=flot_db
+      - POSTGRES_PORT=5432
+    depends_on:
+      - db
+    ports:
+      - '127.0.0.1:31337:8000'
